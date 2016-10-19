@@ -1,0 +1,83 @@
+---
+- name: Add Nginx Repository
+  apt_repository:
+    repo: 'ppa:nginx/stable'
+    state: present
+  ignore_errors: yes
+
+- name: Install Nginx
+  apt:
+    pkg: nginx
+    state: installed
+    update_cache: true
+  notify:
+    - Start Nginx
+
+- name: Add H5BP Config
+  copy:
+    src: h5bp
+    dest: /etc/nginx
+    owner: root
+    group: root
+
+- name: Add Nginx Config
+  copy:
+    src: nginx_deb.conf
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+
+- name: Add Nginx Mime Types
+  copy:
+    src: mime.types
+    dest: /etc/nginx/mime.types
+    owner: root
+    group: root
+
+- name: Ensure Snippets Dir Exists
+  file:
+    path: /etc/nginx/snippets
+    state: directory
+    owner: root
+    group: root
+
+- name: Add Fastcgi-PHP
+  copy:
+    src: fastcgi-php.conf
+    dest: /etc/nginx/snippets/fastcgi-php.conf
+    owner: root
+    group: root
+
+- name: Disable Default Site
+  file:
+    dest: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Add Site Config
+  template:
+    src: app.conf.j2
+    dest: /etc/nginx/sites-available/app.conf
+    owner: root
+    group: root
+  notify:
+    - Reload Nginx
+
+- name: Enable Site Config
+  file:
+    src: /etc/nginx/sites-available/app.conf
+    dest: /etc/nginx/sites-enabled/app.conf
+    state: link
+  notify:
+    - Reload Nginx
+
+# Allow app user to reload php-fpm
+- name: Update Sudoers
+  lineinfile:
+    dest: /etc/sudoers.d/php-fpm
+    owner: root
+    group: root
+    mode: 0440
+    line: "{{ appuser_username }} ALL=NOPASSWD:/usr/sbin/service php5-fpm reload"
+    state: present
+    create: yes
+    validate: 'visudo -cf %s'

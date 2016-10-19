@@ -1,0 +1,7 @@
+---
+galaxy_info:
+  author: Chris Fidoa
+  description: Base server installation items
+  company: Servers for Hackers
+  min_ansible_version: 1.2
+dependencies: []

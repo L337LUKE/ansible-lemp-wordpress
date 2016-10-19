@@ -1,0 +1,91 @@
+---
+- name: Preemptively Answer | PHP APM | newrelic.appname
+  debconf:
+    name: mariadb-server-10.1
+    question: "{{ item }}"
+    vtype: password
+    value: "{{ vault_database_password | mandatory }}"
+  with_items:
+    - mariadb-server/root_password
+    - mariadb-server/root_password_again
+  when: mariadb_server
+
+- name: Install Packages | apt
+  apt:
+    state: present
+    pkg: "{{ item }}"
+  with_items:
+    - python-mysqldb
+    - mariadb-server
+  when: mariadb_server
+
+- name: Install Packages | apt
+  apt:
+    state: latest
+    pkg: "{{ item }}"
+  with_items: "{{ mariadb_modules }}"
+  tags:
+    - software-installation
+    - using-apt
+
+- name: Add conf file
+  template:
+    src: my.conf.j2
+    dest: /etc/.my.cnf
+    owner: root
+    group: root
+  when: mariadb_server
+
+- name: Update Root User
+  mysql_user:
+    name: root
+    host: "{{ item }}"
+    password: "{{ vault_database_root_password }}"
+    login_user: root
+    login_password: "{{ vault_database_root_password }}"
+    check_implicit_admin: yes
+    priv: "*.*:ALL,GRANT"
+  with_items:
+    - "{{ ansible_hostname }}"
+    - 127.0.0.1
+    - ::1
+    - localhost 
+  when: mariadb_server
+
+- name: Create Database
+  mysql_db:
+    state: present
+    name: "{{ database_name | default(project) }}"
+    login_user: root
+    login_password: "{{ database_root_password }}"
+  when: mariadb_server
+
+- name: Create Database User
+  mysql_user:
+    state: present
+    name: "{{ database_username | default(project) }}"
+    password: "{{ database_password | mandatory }}"
+    priv: "mysql.*:ALL/{{ project }}.*:ALL"
+    host: "%"
+    login_user: root
+    login_password: "{{ database_root_password }}"
+  when: mariadb_server
+
+- name: Install Packages | apt
+  apt:
+    state: latest
+    pkg: "{{ item }}"
+  with_items:
+    - mariadb-client
+  when: mariadb_client
+
+- name: Install Packages | apt
+  apt:
+    state: latest
+    pkg: "{{ item }}"
+  with_items:
+    - p7zip-full
+  when: mariadb_backup_enabled
+  tags:
+    - p7zip
+    - backup

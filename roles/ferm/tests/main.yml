@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  remote_user: travis
+  sudo: true
+
+  roles:
+    - role: ansible-ferm
+      tags: ferm
+      ferm_input_list:
+        - type: "dport_accept"
+          dport: ["http"]

@@ -1,0 +1,33 @@
+---
+- name: Add PHP Repository if Ubuntu
+  apt_repository:
+    repo: 'ppa:ondrej/php'
+    state: present
+  ignore_errors: yes
+
+- name: Install PHP and PHP-FPM
+  apt:
+    pkg: '{{ item }}'
+    state: installed
+    update_cache: yes
+  with_items:
+   - php7.1-fpm
+   - php7.1-cli
+   - php7.1-pgsql
+   - php7.1-mysql
+   - php7.1-sqlite3
+   - php7.1-curl
+   - php7.1-gd
+   - php7.1-mcrypt
+   - php-memcached
+   - php7.1-intl
+   - php7.1-imap
+  notify:
+    - Start PHP7.1-FPM
+
+- name: Add PHP-FPM Resource Pool
+  template:
+    src: www.conf_deb.j2
+    dest: /etc/php/7.1/fpm/pool.d/www.conf
+  notify:
+    - Restart PHP7.1-FPM

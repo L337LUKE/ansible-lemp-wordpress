@@ -1,0 +1,33 @@
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /home/{{ appuser_username }}/{{ app_name }}/current/public;
+
+    index index.html index.htm index.php;
+
+    server_name _;
+
+    access_log /var/log/nginx/{{ app_name }}-access.log;
+    error_log  /var/log/nginx/{{ app_name }}-error.log error;
+
+    # Browser and robot always look for these
+    # Turn off logging for them
+    location = /favicon.ico { log_not_found off; access_log off; }
+    location = /robots.txt  { log_not_found off; access_log off; }
+
+    include h5bp/basic.conf;
+
+    location / {
+        try_files $uri $uri/ /index.php?is_args$args;
+    }
+
+    location ~ \.php$ {
+       include snippets/fastcgi-php.conf;
+
+       # With php5-cgi alone:
+       fastcgi_pass 127.0.0.1:9000;
+       # With php5-fpm:
+       #fastcgi_pass unix:/var/run/php5-fpm.sock;
+    }
+}

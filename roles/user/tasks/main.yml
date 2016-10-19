@@ -1,0 +1,28 @@
+---
+# User that will run sudo commands
+- name: Add Admin User
+  user:
+    name: '{{ admin_username }}'
+    groups: sudo
+    append: yes
+    password: '{{ vault_appadmin_password }}'
+    shell: /bin/bash
+
+- name: Enable Remote (person) Access to Admin
+  authorized_key:
+    user: '{{ admin_username }}'
+    key: "{{ local_authorized_key }}"
+
+# User that will be using our application
+- name: Add Application User
+  user:
+    name: '{{ appuser_username }}'
+    password: '{{ vault_appuser_password }}'
+    shell: /bin/bash
+    generate_ssh_key: yes
+    ssh_key_bits: 4096
+
+- name: Enable Remote (Person) Access to Appuser
+  authorized_key:
+    user: '{{ appuser_username }}'
+    key: "{{ local_authorized_key }}"

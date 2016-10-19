@@ -1,0 +1,88 @@
+---
+# Debian or Ubuntu
+- include: deb.yml
+  when: "ansible_os_family == 'Debian'"
+
+# Common Tasks
+
+# SSH Configuration
+# access github for deployment/building
+- name: Configure Appuser SSH Config
+  template:
+    src: ssh_config.j2
+    dest: '/home/{{ appuser_username }}/.ssh/config'
+
+- name: Add GitHub Access Private Key
+  copy:
+    content: "{{ github_private_key }}"
+    dest: '/home/{{ appuser_username }}/.ssh/id_github'
+    mode: "u=rw,go-rwx"
+    owner: '{{ appuser_username }}'
+    group: '{{ appuser_username }}'
+
+- name: Add GitHub Access Public Key
+  copy:
+    content: "{{ github_public_key }}"
+    dest: '/home/{{ appuser_username }}/.ssh/id_github.pub'
+    mode: "u=rw,g=r,o-rwx"
+    owner: '{{ appuser_username }}'
+    group: '{{ appuser_username }}'
+
+# User details
+- name: Ensure user has .composer directory
+  file:
+    path: '/home/{{ appuser_username }}/.composer'
+    state: directory
+    owner: '{{ appuser_username }}'
+    group: '{{ appuser_username }}'
+
+# Composer token
+# Requires php
+- name: Add GitHub Token for Composer
+  shell: '/usr/local/bin/composer --global config github-oauth.github.com {{ vault_github_token }}'
+  become: true
+  become_method: sudo
+
+# Application Directories
+- name: Create Persist App Directories
+  file:
+    path: '/home/{{ appuser_username }}/{{ app_name }}/persist/storage/app'
+    state: directory
+    owner: '{{ appuser_username }}'
+    group: '{{ appuser_username }}'
+
+- name: Create Persist Framework-Cache  Directories
+  file:
+    path: '/home/{{ appuser_username }}/{{ app_name }}/persist/storage/framework/cache'
+    state: directory
+    owner: '{{ appuser_username }}'
+    group: '{{ appuser_username }}'
+
+- name: Create Persist Framework-Session Directories
+  file:
+    path: '/home/{{ appuser_username }}/{{ app_name }}/persist/storage/framework/sessions'
+    state: directory
+    owner: '{{ appuser_username }}'
+    group: '{{ appuser_username }}'
+
+- name: Create Persist Framework-Views Directories
+  file:
+    path: '/home/{{ appuser_username }}/{{ app_name }}/persist/storage/framework/views'
+    state: directory
+    owner: '{{ appuser_username }}'
+    group: '{{ appuser_username }}'
+
+- name: Create Log Directories
+  file:
+    path: '/home/{{ appuser_username }}/{{ app_name }}/persist/storage/logs'
+    state: directory
+    owner: '{{ appuser_username }}'
+    group: '{{ appuser_username }}'
+
+# Application env
+- name: Add application environment
+  copy:
+    src: .env
+    dest: '/home/{{ appuser_username }}/{{ app_name }}/persist/.env'
+    owner: '{{ appuser_username }}'
+    group: '{{ appuser_username }}'

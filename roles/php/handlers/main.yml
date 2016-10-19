@@ -1,0 +1,7 @@
+---
+# Debian/Ubuntu
+- name: Start PHP7.1-FPM
+  service: name=php7.1-fpm state=started
+
+- name: Restart PHP7.1-FPM
+  service: name=php7.1-fpm state=restarted

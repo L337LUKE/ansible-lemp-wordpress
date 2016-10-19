@@ -1,0 +1,23 @@
+---
+# This file will provision all the hosts setup in the 
+# hosts file created within this repo.
+#
+# Make sure you have configured the hosts correctly in order
+# for this to work.
+
+# Setup VM
+- hosts:
+  - web
+  become: true
+  become_method: sudo
+  roles:
+    - server-base
+    - fail2ban 
+    - ferm
+    - user
+    - nginx
+    - php
+    - mariadb
+    - app
+
+# Setup Remote Server

@@ -1,0 +1,17 @@
+# Ansible Specific
+.vault_pass
+vault.yml
+*.retry
+hosts
+
+# Ansible roles installed through galaxy
+telusdigital.apt-repository/
+telusdigital.logrotate/
+
+# Vagrant
+.vagrant/
+
+# System Files
+.DS_Store
+.bash_history
+.cache
