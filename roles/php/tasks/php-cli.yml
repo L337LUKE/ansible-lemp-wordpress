@@ -1,0 +1,6 @@
+---
+- name: php-cli/php.ini - Set Timezone
+  lineinfile:
+    dest: "{{php_config_prefix}}/cli/php.ini"
+    regexp: "date.timezone ="
+    line: "date.timezone = {{ server.timezone }}"

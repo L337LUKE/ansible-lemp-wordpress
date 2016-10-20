@@ -1,0 +1,24 @@
+---
+# Add our own customized .conf file
+- name: Add php-fpm Resource Pool
+  template:
+    src: www.conf.j2
+    dest: "{{php_config_prefix}}/fpm/pool.d/www.conf"
+
+# Ensure the php-fpm ini's time
+- name: php-fpm/php.ini - set timezone
+  lineinfile:
+    dest: "{{php_config_prefix}}/fpm/php.ini"
+    regexp: 'date.timezone ='
+    line: 'date.timezone = {{ server.timezone }}'
+
+- name: php-fpm/php.ini - Disable expose_php
+  lineinfile:
+    dest: "{{php_config_prefix}}/fpm/php.ini"
+    regexp: ';?expose_php=\d'
+    line: 'expose_php=0'
+
+- name: Restart php-fpm
+  service:
+    name: "{{php_config_prefix}}-fpm"
+    state: restarted

@@ -20,8 +20,8 @@
 ; Unix user/group of processes
 ; Note: The user is mandatory. If the group is not set, the default user's group
 ;       will be used.
-user = {{ appuser_username }}
-group = {{ appuser_username }}
+user = www-data
+group = www-data
 
 ; The address on which to accept FastCGI requests.
 ; Valid syntaxes are:
@@ -387,7 +387,7 @@ chdir = /
 ;env[TEMP] = /tmp
 
 ; Additional php.ini defines, specific to this pool of workers. These settings
-; overwrite the values previously defined in the php.ini. The directives are the
+; overwrite the values previously defined in php.ini. The directives are the
 ; same as the PHP SAPI:
 ;   php_value/php_flag             - you can set classic ini defines which can
 ;                                    be overwritten from PHP call 'ini_set'.

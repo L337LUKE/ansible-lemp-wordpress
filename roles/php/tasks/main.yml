@@ -1,46 +1,27 @@
 ---
-- name: Add PHP Repository
+- name: Add PHP PPA Repository
   apt_repository:
     repo: 'ppa:ondrej/php'
     state: present
-  ignore_errors: yes
 
-- name: Install PHP and PHP-FPM
+- name: Update apt packages
   apt:
-    pkg: '{{ item }}'
-    state: installed
     update_cache: yes
-  with_items:
-   - php7.1-fpm
-   - php7.1-cli
-   - php7.1-pgsql
-   - php7.1-mysql
-   - php7.1-sqlite3
-   - php7.1-curl
-   - php7.1-gd
-   - php7.1-mcrypt
-   - php-memcached
-   - php7.1-intl
-   - php7.1-imap
+
+- name: Install PHP
+  apt:
+    pkg: "{{ php_version }}"
+    state: latest
+
+- name: Install PHP-FPM
+  apt:
+    pkg: "{{ php_version }}-fpm"
+    state: latest
+
+- name: Install PHP Packages
+  with_items: php.packages
+  when: php.packages is defined
   notify:
     - Start PHP7.1-FPM
 
-- name: Add PHP-FPM Resource Pool
-  template:
-    src: www.conf.j2
-    dest: /etc/php/7.1/fpm/pool.d/www.conf
-  notify:
-    - Restart PHP7.1-FPM
-
-# Install composer
-- name: Install Composer
-  shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin creates=/usr/local/bin/composer.phar
-
-- name: Rename composer.phar to composer
-  shell: mv /usr/local/bin/composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
-
-- name: Make Composer Executable
-  shell: chmod a+x /usr/local/bin/composer
-
-- name: Composer Self Update
-  shell: /usr/local/bin/composer self-update
+- include: configure.yml
