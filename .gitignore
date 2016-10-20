@@ -8,6 +8,9 @@ hosts
 telusdigital.apt-repository/
 telusdigital.logrotate/
 
+# Testing Stuff
+.testing/
+
 # Vagrant
 .vagrant/
 
