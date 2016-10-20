@@ -1,0 +1,25 @@
+---
+# php_packages: []
+php_display_errors: 'On'
+php_display_startup_errors: 'On'
+php_html_errors: 'On'
+
+# Gets your public ip address and whitelists it,
+# This permits you and people on your IP to access the server.
+# ----
+# If more ips need to be whitelisted then feel free to extend the array.
+ip_whitelist: ["{{ lookup('pipe', 'curl -4 -s https://api.ipify.org') }}"]
+
+# Ferm Security
+# Tweak these settings if required although you probably won't need to
+ferm_input_list:
+  - type: dport_accept
+    dport: [http, https]
+    filename: nginx_accept
+  - type: dport_accept
+    dport: [ssh]
+    saddr: "{{ ip_whitelist }}"
+  - type: dport_limit
+    dport: [ssh]
+    seconds: 300
+    hits: 20

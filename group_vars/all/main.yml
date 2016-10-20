@@ -1,78 +1,26 @@
 ---
-# Deployed Application Details
+# The name of our application (machine-readable)
+app_name: testapp
 
-# User that will run and deploy the application
-# An admin user which will be allowed to run sudo commands
+# Users that will administrate and deploy the application
 appuser_username: appuser
 admin_username: appadmin
-
-# The name of our application (machine-readable)
-# {{ project }} uses app_name as its reqired by the mariadb role
-app_name: testapp
-project: "{{ app_name }}"
 
 # Passwords for created users
 admin_password:   "{{ vault_appadmin_password }}"
 appuser_password: "{{ vault_appuser_password }}"
 
-# MariaDB configurables
+# Database configuration
 database_root_password: "{{ vault_database_root_password }}"
-
 database_name: testapp
 database_username: testappdbuser
 database_password: "{{ vault_database_password }}" 
 
-# Your local public key, e.g. ~/.ssh/id_rsa.pub
-# This will be added to the "authorized_keys" file on
-# every server, so we can SSH into those servers from our
-# local machines (e.g. your laptop)
-#
-# Include the contents of the key here not the reference to the file
+# Your local public key, e.g. ~/.ssh/id_rsa.pub which is added to the
+# "authorized_keys" file on every server allowing SSH access
 # $ cat ~/.ssh/id_rsa.pub | pbcopy
-# When using vagrant the command gets run inside the machine meaning the reference is incorrect
 local_authorized_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDAe74npmzsUje13qWonJeYuQubxUeGArOXAu0rYbZfqcs5+1oY3jAXQDOjHSai4RpXsLkIyE11KgUdIuOYehXPCMtA03fRFvywuyhHbLeA1SATYzxlqm6JscPyVU6nfWu/6GWFTrVB9SjffQ35TM1gPqxL7zLCnVJIM4Dzke8y1a7h0yLlTwhdWXfVWqayPnB0k/drZ28lQTxLCQE92yWvKKtaxfLlejUIOBG/y7hJfg5+Ff7zIsr5+48Fy9do0piwEBaiXpe/qsi5E7GSDxm2ZEq8TLJ4nENBssjqovl0Yi0J6cEeNiDAnEwOurXT4lW3mf1crs7fBuOD+GDpYRCKhEQBrNGCzQpd0YFdtA6l7lWh9lBhwI3qI6tNGm8CP5MlBnuvx/ximik1UQ9dBezL+d11La3akLSDGb+u3hpvMa0Gfi0bEvOrCtsH+i0FIiohtp7bR/wvpF273N+AK/NDcpnhnpZG+e98vR1eTtRs3jYinfGl/QExL677VrFujguf4DxtRuo5C0ppRSQBRCdGDiYmcrTtghfkb7F5RfI7rv1+ZZ4WOCc0tUTUGvvx8CVekffr4gc5gXNA8+Q8Sr0s5GN7/Rk4cC3TY3/ItVH9OvYAra0xZbZO0NKu+6L7EbBIc7si7Nr21LmJBCjeTIfds1L5zXLfn47vSD/R3Ep2mw== luke@lukeroberts.me
 
-# GitHub Webhook secret, must be known to GitHub and to our web listener
-# which listens for webhooks sent from GitHub.
-# >>> This MUST BE added to the WebHook configuration within your GitHub repository
-webhook_secret: "{{ vault_webhook_secret }}"
-
-# The GitHub private key that exists on each web server.
-# The corresponding Public key should be added to Github for the
-# deployed repository. This is added to the Web servers so they
-# can access the github repository during deployment
-# >>> This is the content of `id_testapp_github`
-github_private_key: "{{ vault_private_github_key }}"
-
-# The public key that should be added to Github
-# for the deployed repository.
-# >>> This is the content of `id_testapp_github.pub`
-#
-# Include the contents of the key here not the reference to the file
-# $ cat ~/.ssh/id_rsa.pub | pbcopy
-# When using vagrant the command gets run inside the machine meaning the reference is incorrect
-github_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDNNRo+iH0pwbEEoex3We/TaR6g6vMSlRGbb1AoO4PeT/VahN+h8J7NK1Syzgy4Yh1Ee2ZGyHSsDSYsE9AUOjUDIwhuwpz1OlFBucThPugbxrQcYAqyzPjXuOYUdAH6LlIo+ByTUmlRqEbd2I5ypy8Wjjnoc1b6c/uhRXrsFH7OlPhpshKw9DXDq76vwLMQa6PfZaHy59Eagik4gRJkMS4TeSbO344Uh9g3IkRS5oI2a6AHFjRBLWWgHldEb6Eter4lzP/9JQmE9Z9r5r4m6zO2eYn0DikXm/h8e5U5pDsn4ND84Ts2zoaiPTvqGniBCA3R9HnsgosE1hCvEjBFFKLDob2sbwi+XfDftl+hM9y5YDV/PaEhYupISnTbapumjxrDRM0S9qCJCjiCFlc3RbfhhUyIIjgNwFk73RPns9r2o4QhMBNNbw8zPdYstPnzezV6KNPAoFEfnB7kl53A07FYw1Pfoh7hGDPUDWyF0E8zGnxfJrML33TfsOFDPjAxxn5JbUVolHVJ3rEZ8EB+zRJpOWyhKtrKD1uyDg/QZc0ACV1RZL03ihMcQ3Rj/iCT6eiFY/5IG4JKScdVCSEG+P7dX50VhOpDl/1cWQxt1Kywy9aR/4wqHnUqe2i5iZ8ZIDV1AG8z6JUJ3pykEzQENsYEii29CE2MFjJLljHdtyZRgw== luke@weareadaptable.com 
-
 # Generate a GitHub access token for Composer
-# to use as per
 # https://help.github.com/articles/creating-an-access-token-for-command-line-use/
 github_token: "{{ vault_github_token }}" 
-
-
-# Basically gets public ip address and whitelists it, permitting access to the server
-# Add further, valid public ip addresses to here if needbe
-ip_whitelist: ["{{ lookup('pipe', 'curl -4 -s https://api.ipify.org') }}"]
-
-# Ferm Security
-# Tweak these settings if required although you probably won't need to
-ferm_input_list:
-  - type: dport_accept
-    dport: [http, https]
-    filename: nginx_accept
-  - type: dport_accept
-    dport: [ssh]
-    saddr: "{{ ip_whitelist }}"
-  - type: dport_limit
-    dport: [ssh]
-    seconds: 300
-    hits: 20

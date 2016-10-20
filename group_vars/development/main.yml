@@ -1,0 +1,7 @@
+---
+# Config for development machines
+
+# php_packages: []
+php_display_errors: 'On'
+php_display_startup_errors: 'On'
+php_html_errors: 'On'
