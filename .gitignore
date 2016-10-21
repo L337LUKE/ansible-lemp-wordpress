@@ -5,8 +5,7 @@ vault.yml
 hosts
 
 # Ansible roles installed through galaxy
-telusdigital.apt-repository/
-telusdigital.logrotate/
+vendor/roles/
 
 # Testing Stuff
 .testing/
