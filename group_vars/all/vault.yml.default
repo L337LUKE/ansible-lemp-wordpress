@@ -1,0 +1,23 @@
+---
+# IMPORTANT
+# ---------
+# Remember to store pre-SHA'd passwords in something like 1Password 
+# for other users.
+#
+# Generate SHA512 passwords via the following:
+# http://docs.ansible.com/ansible/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
+
+# Password for the admin user of the server 
+vault_appadmin_password: 'change and SHA512 me'
+
+# Password for the app/deploy user of the server
+vault_appuser_password: 'change and SHA512 me'
+
+# Mysql password for the regular DB user
+vault_database_password: 'change and SHA512 me'
+
+# Mysql password for the root DB user
+vault_database_root_password: 'change and SHA512 me' 
+
+# Github Access Token (required for composer)
+vault_github_token: '123456789e0123456789e0123456789'
