@@ -77,7 +77,7 @@
     owner: root
     group: root
     mode: 0440
-    line: "{{ appuser_username }} ALL=NOPASSWD:/usr/sbin/service php5-fpm reload"
+    line: "{{ appuser_username }} ALL=NOPASSWD:/usr/sbin/service {{ php_version }}-fpm restart"
     state: present
     create: yes
     validate: 'visudo -cf %s'
