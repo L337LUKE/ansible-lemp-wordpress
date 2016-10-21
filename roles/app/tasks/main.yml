@@ -7,11 +7,3 @@
     state: directory
     owner: '{{ appuser_username }}'
     group: '{{ appuser_username }}'
-
-# Composer Directory
-- name: Ensure user has .composer directory
-  file:
-    path: '/home/{{ appuser_username }}/.composer'
-    state: directory
-    owner: '{{ appuser_username }}'
-    group: '{{ appuser_username }}'
