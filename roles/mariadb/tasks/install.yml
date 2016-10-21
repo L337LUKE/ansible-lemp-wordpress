@@ -14,6 +14,7 @@
   apt:
     state: present
     pkg: "{{ item }}"
+    allow_unauthenticated: true
   with_items:
     - python-mysqldb
     - mariadb-server
@@ -55,7 +56,7 @@
 - name: Create Database
   mysql_db:
     state: present
-    name: "{{ database_name | default(project) }}"
+    name: "{{ database_name | default(app_name) }}"
     login_user: root
     login_password: "{{ database_root_password }}"
   when: mariadb_server
@@ -63,9 +64,9 @@
 - name: Create Database User
   mysql_user:
     state: present
-    name: "{{ database_username | default(project) }}"
+    name: "{{ database_username | default(app_name) }}"
     password: "{{ database_password | mandatory }}"
-    priv: "mysql.*:ALL/{{ project }}.*:ALL"
+    priv: "mysql.*:ALL/{{ app_name }}.*:ALL"
     host: "%"
     login_user: root
     login_password: "{{ database_root_password }}"
