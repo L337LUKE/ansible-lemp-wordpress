@@ -1,7 +1,0 @@
----
-galaxy_info:
-  author: Luke Roberts
-  description: LEMP Stack for Web Development
-  company: Adaptable
-  min_ansible_version: 1.2
-dependencies: []

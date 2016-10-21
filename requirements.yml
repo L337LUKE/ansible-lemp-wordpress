@@ -2,3 +2,4 @@
 # Dependencies for MariaDB role
 - src: telusdigital.logrotate
 - src: telusdigital.apt-repository
+- src: geerlingguy.composer
