@@ -1,6 +1,5 @@
 # Ansible Specific
 .vault_pass
-vault.yml
 *.retry
 hosts
 

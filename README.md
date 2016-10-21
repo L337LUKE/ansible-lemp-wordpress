@@ -12,9 +12,13 @@ Thre will be an optional extra soon to include;
 
 ## TL;DR
 
-Install shit on your machine - [VirtualBox](https://www.virtualbox.org/wiki/Downloads), [Vagrant](https://www.vagrantup.com/downloads.html), [Ansible](http://docs.ansible.com/ansible/intro_installation.html#latest-releases-on-mac-osx)
+Install stuff on your machine:
 
-Install Ansible on the server
+- [VirtualBox](https://www.virtualbox.org/wiki/Downloads) (optional)
+- [Vagrant](https://www.vagrantup.com/downloads.html), (optional)
+- [Ansible](http://docs.ansible.com/ansible/intro_installation.html#latest-releases-on-mac-osx)
+
+Install Ansible and some other requirements on your servers
 
 ```bash
 sudo apt-get update
@@ -23,17 +27,29 @@ sudo apt-add-repository ppa:ansible/ansible
 sudo apt-get update
 sudo apt-get install ansible python-apt aptitude -y
 ```
+Generate SSH keys for ansible to use 
+`ssh-keygen -t rsa -b 4096 -C "example@example.com" -f ~/.ssh/id_testapp`
 
 Edit to match requirements `group_vars/all/main.yml`
 
-Duplicate and fill out necessary server ip addresses `hosts.orig > hosts`
+Create a `.vault_pass` file in the root (store passwords in 1password also)
 
-Generate/save a password using 1password and place it in a `.vault_pass` file
+Copy `vault.yml.default` to `vault.yml` and fill out values
 
-Edit then encrypt the `group_vars/all/vault.yml` file.
+!IMPORTANT!  
+Encrypt `vault.yml` before committing this file to your repo otherwise you're basically giving
+everyone your passwords.  
 
-provision that shit `ansible-playbook`
+I recommend using the `ansible-vault edit group_vars/all/vault.yml` command.
+which will never un-encrypt your files
 
+Fill out necessary hosts in the `inventories/` dir
+
+Provision and be happy
+```bash
+ansible-galaxy install -r requirements.yml
+ansible-playbook --key-file=~/.ssh/id_rsa -i inventories/webservers playbook.servers.yml
+```
 <br>
 
 ## Ansible-Vault & Security
