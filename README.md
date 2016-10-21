@@ -17,8 +17,10 @@ Install shit on your machine - [VirtualBox](https://www.virtualbox.org/wiki/Down
 Install Ansible on the server
 
 ```bash
-sudo apt-get update && sudo apt-get install software-properties-common -y
-sudo apt-add-repository ppa:ansible/ansible && sudo apt-get update
+sudo apt-get update
+sudo apt-get install software-properties-common -y
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get update
 sudo apt-get install ansible python-apt aptitude -y
 ```
 
@@ -97,92 +99,45 @@ You can use the below to generate your ssh keys
 ```bash
 # Required for ansible to talk to login through SSH and run commands
 ssh-keygen -t rsa -b 4096 -C "example@example.com" -f ~/.ssh/id_testapp
-
-# Required in order to authenticate with github
-ssh-keygen -t rsa -b 4096 -C "example@example.com" -f ~/.ssh/id_testapp_github
 ```
 
 <br>
 
-Once you've done this, place the raw public key files into the `group_vars/all/main.yml` file
-and the easiest way to do this is.
+Once you've done this place the raw public key file into the  
+`group_vars/all/main.yml` file and the easiest way to do this is  
+via piping to `pbcopy`.
 
 ```bash
-# Take the contents of the public SSH key and place into your clipboard
 $ cat ~/.ssh/id_testapp.pub | pbcopy
-
-# Now just paste where appropriate!
 ```
 <br>
 
-## Running on virtual machine/host
+## Test/Setup on VM
 
-You don't need to login to your VM in order to run Ansible as we 
-use the `ansible provisioner` provided by Vagrant which allows us 
-to install it on `vagrant up`.
+You can also provision a VM with Ansible if you need and this can be  
+done simply on `vagrant up` no hassle and using the `Vagrantfile` in  
+this repository.
 
-A Vagrantfile is also included in the project so you can just place this in the same directory and everything should be good to go.
+You can use this as a development environment or to simply just  
+test your playbook.
 
 ```bash
-# First time installation
-$ vagrant up
-
-# If you need to re-provision after altering config
-$ vagrant reload --provision
+vagrant up
 ```
 
 <br>
 
-## Ansible.cfg
-
-There is an additional config file but you will most likely never need to touch this, but further info for configuring this can be found in the [ansible docs](http://docs.ansible.com/ansible/intro_configuration.html).
-
-**Never** Much like the vault section above never add this to your VCS.
-
-<br>
-
-## Hosts file
-
-In the playbook root there is a `hosts.orig` file, copy this and name it `hosts`.  When you open the file the defaults are for the VM if you want to spin up a VM with the playbooks.
-
-However you'll most likely want to add a server(s) that you want to provision so go ahead and add the IP address under the all/web group.
-
-Once you've done that you should be good here.
-
-<br>
-
-## Provisioning - provision.yml
-
-This is the entry point for the playbook when you tell ansible to begin execution.  In this file the seperate provisioning blocks are setup already with the tasks that need to be run and in what order, so you shouldn't need to edit this file.
-
-By default everything will get executed when running this playbook with the following:
-
-`ansible-playbook --private-key ~/.ssh/id_testapp -i hosts provision.yml` 
-
-If for some reason you don't want to run everything in the playbook you can specify your own series of hosts to run by using something like the following
-
-<br>
-
-## Running Ansible
+## Running The plays
 
 ```bash
 cd ~/path/to/playbook-dir
 
-# Check our Yaml Syntax
-ansible-playbook --private-key=~/.ssh/id_testapp \
--i hosts \
---syntax-check \
-provision.yml
+# Install required galaxy roles
+ansible-galaxy install -r requirements.yml
 
-# Run Everything!
-ansible-playbook --private-key=~/.ssh/.pem \
--i hosts \
-provision.yml
+# Provision Servers
+ansible-playbook --key-file=~/.ssh/id_rsa -i inventories/webservers playbook.servers.yml
 
-# Or, Limit runs by host
-# In this example, we run only load_balancer tasks
-ansible-playbook --private-key=~/.ssh/fideloperllc.pem \
--i hosts --limit=load_balancer \
-provision.yml
+# Limit hosts if you need
+ansible-playbook --key-file=~/.ssh/id_rsa -i inventories/webservers playbook.servers.yml --limit=server_group
 ```
-
