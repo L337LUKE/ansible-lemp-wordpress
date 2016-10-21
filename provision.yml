@@ -7,9 +7,8 @@
 
 # Setup VM
 - hosts:
-  - web
+  - webservers
   become: true
-  become_method: sudo
   roles:
     - server-base
     - fail2ban 
@@ -17,7 +16,6 @@
     - user
     - nginx
     - php
+    - geerlingguy.composer
     - mariadb
     - app
-
-# Setup Remote Server
