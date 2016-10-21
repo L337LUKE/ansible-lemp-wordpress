@@ -26,7 +26,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "ansible_local" do |ansible|
     ansible.galaxy_role_file    = "requirements.yml"
     ansible.playbook            = 'provision.yml'
-    ansible.inventory_path      = "hosts"
+    ansible.inventory_path      = "inventories/development"
     ansible.verbose             = true
     ansible.install             = true
   end
