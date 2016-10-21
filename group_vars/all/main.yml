@@ -23,4 +23,6 @@ local_authorized_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDAe74npmzsUje13qWonJ
 
 # Generate a GitHub access token for Composer
 # https://help.github.com/articles/creating-an-access-token-for-command-line-use/
-github_token: "{{ vault_github_token }}" 
+composer_github_oauth_token: "{{ vault_github_token }}" 
+composer_home_owner: "{{ vault_appuser_password }}" 
+composer_home_group: "{{ vault_appuser_password }}" 
