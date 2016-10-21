@@ -1,27 +1,21 @@
 ---
-- name: Add PHP PPA Repository
-  apt_repository:
-    repo: 'ppa:ondrej/php'
-    state: present
+- name: Add PPA Repository
+  apt_repository: repo=ppa:ondrej/{{ php.ppa }} state=present
 
 - name: Update apt packages
-  apt:
-    update_cache: yes
+  apt: update_cache=yes
 
 - name: Install PHP
-  apt:
-    pkg: "{{ php_version }}"
-    state: latest
+  apt: pkg="{{php_version}}" state=latest
 
 - name: Install PHP-FPM
-  apt:
-    pkg: "{{ php_version }}-fpm"
-    state: latest
+  apt: pkg="{{php_version}}-fpm" state=latest
 
 - name: Install PHP Packages
-  with_items: php.packages
+  apt: pkg={{ item }} state=latest
+  with_items: "{{ php.packages }}"
   when: php.packages is defined
   notify:
-    - Start PHP7.1-FPM
+    - Start PHP-FPM 
 
 - include: configure.yml
