@@ -1,0 +1,4 @@
+# Targets all webservers
+[webservers]
+staging     ansible_host=192.168.XXX.XXX     ansible_connection=ssh      ansible_user=
+production  ansible_host=192.168.XXX.XXX     ansible_connection=ssh      ansible_user=
