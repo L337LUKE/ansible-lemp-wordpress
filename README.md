@@ -12,7 +12,15 @@ Thre will be an optional extra soon to include;
 
 ## TL;DR
 
-Install shit - [VirtualBox](https://www.virtualbox.org/wiki/Downloads), [Vagrant](https://www.vagrantup.com/downloads.html), [Ansible](http://docs.ansible.com/ansible/intro_installation.html#latest-releases-on-mac-osx)
+Install shit on your machine - [VirtualBox](https://www.virtualbox.org/wiki/Downloads), [Vagrant](https://www.vagrantup.com/downloads.html), [Ansible](http://docs.ansible.com/ansible/intro_installation.html#latest-releases-on-mac-osx)
+
+Install Ansible on the server
+
+```bash
+sudo apt-get update && sudo apt-get install software-properties-common -y
+sudo apt-add-repository ppa:ansible/ansible && sudo apt-get update
+sudo apt-get install ansible python-apt aptitude -y
+```
 
 Edit to match requirements `group_vars/all/main.yml`
 
@@ -177,3 +185,4 @@ ansible-playbook --private-key=~/.ssh/fideloperllc.pem \
 -i hosts --limit=load_balancer \
 provision.yml
 ```
+
