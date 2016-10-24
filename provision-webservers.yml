@@ -10,12 +10,5 @@
   - webservers
   become: true
   roles:
-    - server-base
     - fail2ban 
     - ferm
-    - user
-    - nginx
-    - php
-    - geerlingguy.composer
-    - mariadb
-    - app
